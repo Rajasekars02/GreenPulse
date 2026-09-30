@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GreenVolt – AI Intelligent Energy &amp; Environmental Optimization</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+/* ─────────────────────────────────────────────
+   RESET
+───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─────────────────────────────────────────────
+   DESIGN TOKENS
+───────────────────────────────────────────── */
+:root {
+  --green-50:  #f0fdf4;
+  --green-100: #dcfce7;
+  --green-200: #bbf7d0;
+  --green-400: #4ade80;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+  --teal-500:  #14b8a6;
+  --charcoal:  #1e2433;
+  --gray-500:  #6b7280;
+  --gray-400:  #9ca3af;
+  --gray-300:  #d1d5db;
+  --gray-200:  #e5e7eb;
+  --gray-100:  #f3f4f6;
+  --white:     #ffffff;
+  --amber-500: #f59e0b;
+  --red-500:   #ef4444;
+  --blue-500:  #3b82f6;
+  --sh-sm: 0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh-md: 0 4px 12px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.05);
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px;
+}
+
+html { font-size: 14px; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #f7f8fc;
+  color: var(--charcoal);
+  overflow-x: hidden;
+}
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 99px; }
+
+/* ─────────────────────────────────────────────
+   TOP NAV — fixed 64 px
+───────────────────────────────────────────── */
+.topnav {
+  position: sticky; top: 0; z-index: 200;
+  width: 100%;
+  height: 64px; min-height: 64px; max-height: 64px;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: var(--sh-sm);
+  display: flex; align-items: center;
+  padding: 0 28px; gap: 14px; overflow: hidden;
+}
+.nav-brand { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+.brand-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg,var(--green-500),var(--teal-500));
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.brand-icon svg { width: 17px; height: 17px; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-text .b1 { font-size: 14px; font-weight: 800; color: var(--charcoal); letter-spacing: -.2px; }
+.brand-text .b2 { font-size: 9px; font-weight: 500; color: var(--gray-400); letter-spacing: .6px; text-transform: uppercase; }
+.nav-page-chip {
+  font-size: 12.5px; font-weight: 600; color: var(--green-700);
+  background: var(--green-50); border: 1px solid var(--green-200);
+  padding: 4px 11px; border-radius: 99px; margin-left: 4px; flex-shrink: 0;
+}
+.nav-spacer { flex: 1; min-width: 0; }
+.ai-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--green-50); border: 1px solid var(--green-200);
+  padding: 5px 12px; border-radius: 99px;
+  font-size: 11.5px; font-weight: 600; color: var(--green-700);
+  white-space: nowrap; flex-shrink: 0;
+}
+.ai-badge .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green-500); animation: pulse 2s infinite;
+}
+.nav-dt { text-align: right; flex-shrink: 0; }
+.nav-time { font-size: 15px; font-weight: 700; color: var(--charcoal); letter-spacing: -.4px; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.nav-date { font-size: 10px; color: var(--gray-400); }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--gray-200); background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--gray-500); flex-shrink: 0; position: relative;
+  transition: background .15s;
+}
+.icon-btn:hover { background: var(--gray-100); }
+.icon-btn svg { width: 16px; height: 16px; }
+.notif-dot {
+  position: absolute; top: -2px; right: -2px;
+  width: 8px; height: 8px; background: var(--red-500);
+  border-radius: 50%; border: 1.5px solid var(--white);
+}
+.avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg,var(--green-500),var(--teal-500));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #fff;
+  border: 2px solid var(--green-200); flex-shrink: 0; cursor: pointer;
+}
+
+/* ─────────────────────────────────────────────
+   ESP32 CONNECTION BANNER
+───────────────────────────────────────────── */
+.conn-banner {
+  display: none;
+  align-items: center; gap: 10px;
+  padding: 9px 28px;
+  font-size: 12px; font-weight: 500;
+}
+.conn-banner.offline  { background: #fff5f5; border-bottom: 1px solid #fecaca; color: #b91c1c; display: flex; }
+.conn-banner.waiting  { background: #fffbeb; border-bottom: 1px solid #fde68a; color: #92400e; display: flex; }
+.conn-banner-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.conn-banner.offline .conn-banner-dot { background: var(--red-500); }
+.conn-banner.waiting .conn-banner-dot { background: var(--amber-500); animation: pulse 1.5s infinite; }
+
+/* ─────────────────────────────────────────────
+   DASHBOARD CONTAINER
+───────────────────────────────────────────── */
+.dashboard {
+  width: 100%; max-width: 1440px;
+  margin: 0 auto; padding: 24px 28px 48px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+.page-title-row { display: flex; align-items: center; justify-content: space-between; }
+.page-title { font-size: 19px; font-weight: 800; color: var(--charcoal); letter-spacing: -.3px; }
+.page-sub   { font-size: 11.5px; color: var(--gray-400); margin-top: 2px; }
+.live-pill {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600; color: var(--green-600);
+  background: var(--green-50); border: 1px solid var(--green-200);
+  padding: 5px 12px; border-radius: 99px;
+}
+.live-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-500); animation: pulse 1.5s infinite; }
+
+/* ─────────────────────────────────────────────
+   KPI GRID
+───────────────────────────────────────────── */
+.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; min-width: 0; }
+.kpi-card {
+  background: var(--white); border-radius: var(--r-lg);
+  padding: 18px 20px 14px;
+  box-shadow: var(--sh-sm); border: 1px solid var(--gray-200);
+  display: flex; flex-direction: column; gap: 10px;
+  position: relative; overflow: hidden; min-width: 0;
+  transition: box-shadow .2s, transform .2s;
+}
+.kpi-card:hover { box-shadow: var(--sh-md); transform: translateY(-1px); }
+.kpi-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+.kc-power::after  { background: linear-gradient(90deg,var(--green-500),var(--teal-500)); }
+.kc-energy::after { background: linear-gradient(90deg,var(--blue-500),#6366f1); }
+.kc-current::after{ background: linear-gradient(90deg,var(--amber-500),#f97316); }
+.kc-co2::after    { background: linear-gradient(90deg,var(--teal-500),#0ea5e9); }
+.kpi-top { display: flex; align-items: flex-start; justify-content: space-between; }
+.kpi-icon { width: 38px; height: 38px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.kc-power   .kpi-icon { background: var(--green-50); color: var(--green-600); }
+.kc-energy  .kpi-icon { background: #eff6ff;         color: var(--blue-500);  }
+.kc-current .kpi-icon { background: #fff7ed;         color: #f97316;          }
+.kc-co2     .kpi-icon { background: #f0fdfa;         color: var(--teal-500);  }
+.kpi-icon svg { width: 19px; height: 19px; }
+.kpi-val  { font-size: 26px; font-weight: 800; color: var(--charcoal); letter-spacing: -1px; line-height: 1; }
+.kpi-unit { font-size: 12px; font-weight: 500; color: var(--gray-400); }
+.kpi-lbl  { font-size: 11.5px; font-weight: 500; color: var(--gray-500); }
+.kpi-sub  { font-size: 10px; color: var(--gray-400); margin-top: 1px; }
+.sparkline { display: block; width: 100%; height: 34px; min-height: 34px; max-height: 34px; flex-shrink: 0; }
+
+/* ─────────────────────────────────────────────
+   MAIN 2-COL ROW
+───────────────────────────────────────────── */
+.main-row { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; align-items: start; min-width: 0; }
+
+/* ─────────────────────────────────────────────
+   CARD BASE
+───────────────────────────────────────────── */
+.card {
+  background: var(--white); border-radius: var(--r-lg);
+  padding: 20px 22px; box-shadow: var(--sh-sm); border: 1px solid var(--gray-200); min-width: 0;
+}
+.card-hdr { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 8px; }
+.card-title { font-size: 13.5px; font-weight: 700; color: var(--charcoal); display: flex; align-items: center; gap: 7px; }
+.card-title svg { width: 15px; height: 15px; color: var(--green-500); flex-shrink: 0; }
+.card-sub { font-size: 10.5px; color: var(--gray-400); margin-top: 2px; }
+.cbadge { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 99px; border: 1px solid; white-space: nowrap; flex-shrink: 0; }
+.cb-green  { background: var(--green-50); color: var(--green-700); border-color: var(--green-200); }
+.cb-orange { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+.cb-red    { background: #fff5f5; color: #b91c1c; border-color: #fecaca; }
+.cb-gray   { background: var(--gray-100); color: var(--gray-500); border-color: var(--gray-300); }
+
+/* ─────────────────────────────────────────────
+   ENERGY CHART — hard-fixed height
+───────────────────────────────────────────── */
+.chart-card {
+  width: 100%;
+  height: 380px; min-height: 380px; max-height: 380px;
+  overflow: hidden;
+}
+.chart-container {
+  position: relative; width: 100%;
+  height: 280px; min-height: 280px; max-height: 280px;
+  overflow: hidden;
+}
+.chart-container > canvas {
+  position: absolute !important;
+  top: 0; left: 0;
+  width: 100% !important;
+  height: 280px !important;
+  max-height: 280px !important;
+}
+.chart-legend { display: flex; gap: 14px; align-items: center; flex-shrink: 0; }
+.legend-item  { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; color: var(--gray-500); }
+.legend-dot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.live-ind { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 600; color: var(--green-600); }
+.live-ind .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-500); animation: pulse 1.5s infinite; }
+
+/* Collecting-data placeholder */
+.chart-placeholder {
+  height: 280px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  color: var(--gray-400);
+}
+.chart-placeholder svg { width: 32px; height: 32px; color: var(--gray-300); }
+.chart-placeholder p   { font-size: 12px; }
+
+/* ─────────────────────────────────────────────
+   AI / SYSTEM STATUS CARD
+───────────────────────────────────────────── */
+.ai-card {
+  background: linear-gradient(155deg,#0f1f15,#0d2318 60%,#0a1f1a);
+  border-radius: var(--r-lg); padding: 20px 22px;
+  border: 1px solid rgba(34,197,94,.18);
+  box-shadow: 0 4px 20px rgba(34,197,94,.07);
+  display: flex; flex-direction: column; gap: 14px; min-width: 0;
+}
+.ai-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(34,197,94,.15); border: 1px solid rgba(34,197,94,.25);
+  padding: 4px 10px; border-radius: 99px;
+  font-size: 10px; font-weight: 700; color: var(--green-400);
+  letter-spacing: .5px; text-transform: uppercase; width: fit-content;
+}
+.ai-chip svg { width: 10px; height: 10px; }
+.ai-title { font-size: 14px; font-weight: 700; color: #fff; }
+.ai-body  { font-size: 12px; line-height: 1.65; color: rgba(255,255,255,.7); }
+.ai-body strong { color: var(--green-400); font-weight: 600; }
+.ai-metrics { display: flex; gap: 10px; flex-wrap: wrap; }
+.ai-metric {
+  flex: 1; min-width: 0;
+  background: rgba(255,255,255,.05); border-radius: var(--r-sm);
+  padding: 9px 11px; border: 1px solid rgba(255,255,255,.06);
+}
+.ai-mval { font-size: 17px; font-weight: 800; color: var(--green-400); letter-spacing: -.4px; word-break: break-all; }
+.ai-mlbl { font-size: 9.5px; color: rgba(255,255,255,.4); margin-top: 2px; }
+
+/* Sensor status rows inside ai-card */
+.sensor-status-list { display: flex; flex-direction: column; gap: 6px; }
+.sensor-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.sensor-name { font-size: 11px; color: rgba(255,255,255,.6); }
+.sensor-pill {
+  font-size: 9.5px; font-weight: 600; padding: 2px 8px; border-radius: 99px;
+}
+.sp-online  { background: rgba(34,197,94,.18); color: var(--green-400); border: 1px solid rgba(34,197,94,.25); }
+.sp-offline { background: rgba(239,68,68,.18);  color: #f87171;         border: 1px solid rgba(239,68,68,.25); }
+
+/* ─────────────────────────────────────────────
+   LOWER ROWS
+───────────────────────────────────────────── */
+.lower-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; min-width: 0; }
+
+/* ENV */
+.env-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.env-card {
+  background: var(--gray-100); border-radius: var(--r-md);
+  padding: 14px 16px; border: 1px solid var(--gray-200);
+  display: flex; flex-direction: column; gap: 7px;
+}
+.env-top { display: flex; align-items: center; justify-content: space-between; }
+.env-icon { width: 32px; height: 32px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; }
+.env-icon svg { width: 16px; height: 16px; }
+.env-status { text-align: right; }
+.env-status-cap { font-size: 9.5px; color: var(--gray-400); }
+.env-status-val { font-size: 10px; font-weight: 600; }
+.env-val { font-size: 22px; font-weight: 800; color: var(--charcoal); letter-spacing: -.6px; line-height: 1; }
+.env-lbl { font-size: 10.5px; font-weight: 500; color: var(--gray-400); }
+.env-bar-wrap { height: 4px; background: var(--gray-200); border-radius: 99px; overflow: hidden; }
+.env-bar      { height: 100%; border-radius: 99px; transition: width .4s ease; }
+.env-unavail  { font-size: 11px; font-style: italic; color: var(--gray-400); }
+
+/* DONUT */
+.donut-wrap { display: flex; align-items: center; gap: 22px; }
+.donut-canvas-wrap {
+  width: 160px; height: 160px;
+  min-width: 160px; min-height: 160px; max-width: 160px; max-height: 160px;
+  position: relative; flex-shrink: 0;
+}
+.donut-canvas-wrap > canvas { position: absolute !important; top: 0; left: 0; width: 160px !important; height: 160px !important; }
+.donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
+.donut-cval { font-size: 18px; font-weight: 800; color: var(--charcoal); letter-spacing: -.4px; }
+.donut-clbl { font-size: 9px; font-weight: 500; color: var(--gray-400); text-transform: uppercase; letter-spacing: .4px; }
+.donut-legend { flex: 1; display: flex; flex-direction: column; gap: 9px; }
+.dl-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.dl-dot { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
+.dl-name { font-size: 11.5px; font-weight: 500; color: var(--charcoal); flex: 1; }
+.dl-pct  { font-size: 11.5px; font-weight: 700; color: var(--charcoal); }
+.dl-bar-wrap { height: 3px; background: var(--gray-100); border-radius: 99px; overflow: hidden; margin-top: 1px; }
+.dl-bar { height: 100%; border-radius: 99px; transition: width .4s ease; }
+
+/* ALERTS */
+.alert-list { display: flex; flex-direction: column; gap: 8px; }
+.alert-item { display: flex; align-items: flex-start; gap: 9px; padding: 10px 13px; border-radius: var(--r-sm); border: 1px solid; }
+.sev-high   { background: #fff5f5; border-color: #fecaca; }
+.sev-medium { background: #fffbeb; border-color: #fde68a; }
+.sev-low    { background: #eff6ff; border-color: #bfdbfe; }
+.sev-ok     { background: #f0fdf4; border-color: var(--green-200); }
+.alert-dot  { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.sev-high   .alert-dot { background: var(--red-500); }
+.sev-medium .alert-dot { background: var(--amber-500); }
+.sev-low    .alert-dot { background: var(--blue-500); }
+.sev-ok     .alert-dot { background: var(--green-500); }
+.alert-body { flex: 1; }
+.alert-ttl  { font-size: 11.5px; font-weight: 600; color: var(--charcoal); }
+.alert-desc { font-size: 10px; color: var(--gray-500); margin-top: 1px; line-height: 1.4; }
+.alert-time { font-size: 9.5px; color: var(--gray-400); flex-shrink: 0; margin-top: 1px; }
+
+/* METRICS GRID */
+.impact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.impact-item {
+  background: var(--gray-100); border-radius: var(--r-md);
+  padding: 13px 15px; border: 1px solid var(--gray-200);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.impact-icon { width: 27px; height: 27px; border-radius: 7px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+.impact-icon svg { width: 14px; height: 14px; }
+.impact-val { font-size: 19px; font-weight: 800; color: var(--charcoal); letter-spacing: -.4px; line-height: 1; }
+.impact-lbl { font-size: 10px; color: var(--gray-500); font-weight: 500; }
+.impact-bar-wrap { height: 3px; background: var(--gray-200); border-radius: 99px; overflow: hidden; margin-top: 5px; }
+.impact-bar { height: 100%; border-radius: 99px; transition: width .4s ease; }
+
+/* FOOTER */
+.footer {
+  border-top: 1px solid var(--gray-200); background: var(--white);
+  padding: 13px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.footer-brand { display: flex; align-items: center; gap: 8px; }
+.footer-icon {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: linear-gradient(135deg,var(--green-500),var(--teal-500));
+  display: flex; align-items: center; justify-content: center;
+}
+.footer-icon svg { width: 12px; height: 12px; }
+.footer-name    { font-size: 11.5px; font-weight: 600; color: var(--charcoal); }
+.footer-tagline { font-size: 10px; color: var(--gray-400); }
+.footer-right   { display: flex; align-items: center; gap: 18px; }
+.footer-meta    { font-size: 10px; color: var(--gray-400); }
+.footer-status  { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 600; color: var(--green-600); }
+.footer-status::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green-500); }
+
+/* KEYFRAMES */
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 2px rgba(34,197,94,.3); }
+  50%      { box-shadow: 0 0 0 5px rgba(34,197,94,.08); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  .main-row { grid-template-columns: 1fr; }
+  .chart-card { height: 380px; min-height: 380px; max-height: 380px; }
+}
+@media (max-width: 860px) {
+  .kpi-grid  { grid-template-columns: repeat(2,1fr); }
+  .lower-row { grid-template-columns: 1fr; }
+  .dashboard { padding: 16px 16px 40px; }
+}
+@media (max-width: 520px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .topnav   { padding: 0 16px; }
+}
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ TOP NAV ═══════════════ -->
+<header class="topnav">
+  <div class="nav-brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z" fill="rgba(255,255,255,.12)"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <span class="b1">GreenVolt</span>
+      <span class="b2">AI Energy System</span>
+    </div>
+  </div>
+  <div class="nav-page-chip">Dashboard</div>
+  <div class="nav-spacer"></div>
+  <div class="ai-badge" id="connBadge">
+    <span class="dot"></span>
+    <span id="connBadgeText">Connecting…</span>
+  </div>
+  <div class="nav-dt">
+    <div class="nav-time" id="clock">00:00:00</div>
+    <div class="nav-date" id="dateline">—</div>
+  </div>
+  <div class="icon-btn" title="Notifications">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </svg>
+    <span class="notif-dot" id="notifDot" style="display:none;"></span>
+  </div>
+  <div class="avatar" title="User Profile">AK</div>
+</header>
+
+<!-- connection error banner -->
+<div class="conn-banner" id="connBanner">
+  <div class="conn-banner-dot"></div>
+  <span id="connBannerMsg">Unable to reach ESP32. Retrying…</span>
+</div>
+
+<!-- ═══════════════ DASHBOARD ═══════════════ -->
+<main class="dashboard">
+
+  <!-- Page title -->
+  <div class="page-title-row">
+    <div>
+      <div class="page-title">GreenVolt Energy Intelligence</div>
+      <div class="page-sub" id="lastUpdateLine">Waiting for ESP32 data…</div>
+    </div>
+    <div class="live-pill"><span class="dot"></span>Live · ESP32</div>
+  </div>
+
+  <!-- ─── KPI CARDS ─────────────────────────── -->
+  <div class="kpi-grid">
+
+    <!-- Current Power -->
+    <div class="kpi-card kc-power">
+      <div class="kpi-top">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="kpi-val" id="kpiPower">— <span class="kpi-unit">kW</span></div>
+        <div class="kpi-lbl">Current Power Draw</div>
+        <div class="kpi-sub" id="kpiPowerSub">Waiting for sensor…</div>
+      </div>
+      <canvas class="sparkline" id="spark1"></canvas>
+    </div>
+
+    <!-- Today's Energy -->
+    <div class="kpi-card kc-energy">
+      <div class="kpi-top">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2"/>
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="kpi-val" id="kpiEnergy">— <span class="kpi-unit">kWh</span></div>
+        <div class="kpi-lbl">Session Energy</div>
+        <div class="kpi-sub" id="kpiEnergySub">Accumulating…</div>
+      </div>
+      <canvas class="sparkline" id="spark2"></canvas>
+    </div>
+
+    <!-- Current (Amps) -->
+    <div class="kpi-card kc-current">
+      <div class="kpi-top">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/>
+            <circle cx="19" cy="19" r="3"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="kpi-val" id="kpiCurrent">— <span class="kpi-unit">A</span></div>
+        <div class="kpi-lbl">Current (Amperes)</div>
+        <div class="kpi-sub" id="kpiCurrentSub">Waiting for sensor…</div>
+      </div>
+      <canvas class="sparkline" id="spark3"></canvas>
+    </div>
+
+    <!-- CO2 Estimated -->
+    <div class="kpi-card kc-co2">
+      <div class="kpi-top">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="kpi-val" id="kpiCO2">— <span class="kpi-unit">kg</span></div>
+        <div class="kpi-lbl">CO₂ Est. (Session)</div>
+        <div class="kpi-sub" id="kpiCO2Sub">Based on measured energy</div>
+      </div>
+      <canvas class="sparkline" id="spark4"></canvas>
+    </div>
+
+  </div>
+
+  <!-- ─── CHART + STATUS CARD ───────────────── -->
+  <div class="main-row">
+
+    <!-- Real-time energy chart -->
+    <div class="card chart-card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+            Real-Time Energy Consumption
+          </div>
+          <div class="card-sub" id="chartSubtitle">Collecting data from ESP32…</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+          <div class="live-ind"><span class="dot"></span>ESP32</div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#22c55e;"></div>Power (kW)
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-container" id="chartContainer">
+        <!-- populated by JS after first data arrives -->
+        <div class="chart-placeholder" id="chartPlaceholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          <p>Waiting for ESP32 measurements…</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- System / AI Status card -->
+    <div class="ai-card">
+      <div class="ai-chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+        </svg>
+        System Status
+      </div>
+      <div class="ai-title" id="sysTitle">Connecting to ESP32…</div>
+      <div class="ai-body" id="sysBody">
+        Dashboard is attempting to reach the ESP32 at
+        <strong id="esp32UrlDisplay">—</strong>.
+        Ensure the ESP32 is powered on and connected to the same Wi-Fi network.
+      </div>
+
+      <!-- live metrics from sensor -->
+      <div class="ai-metrics" id="sysMetrics">
+        <div class="ai-metric">
+          <div class="ai-mval" id="smPower">—</div>
+          <div class="ai-mlbl">Power (kW)</div>
+        </div>
+        <div class="ai-metric">
+          <div class="ai-mval" id="smCost">—</div>
+          <div class="ai-mlbl">Cost ₹ (session)</div>
+        </div>
+        <div class="ai-metric">
+          <div class="ai-mval" id="smLastSeen">—</div>
+          <div class="ai-mlbl">Last update</div>
+        </div>
+      </div>
+
+      <!-- sensor online/offline pills -->
+      <div class="sensor-status-list">
+        <div class="sensor-row">
+          <span class="sensor-name">ESP32</span>
+          <span class="sensor-pill sp-offline" id="pillESP32">Offline</span>
+        </div>
+        <div class="sensor-row">
+          <span class="sensor-name">DHT22 (Temp/Hum)</span>
+          <span class="sensor-pill sp-offline" id="pillDHT22">Unavailable</span>
+        </div>
+        <div class="sensor-row">
+          <span class="sensor-name">PIR (Motion)</span>
+          <span class="sensor-pill sp-offline" id="pillPIR">Unavailable</span>
+        </div>
+        <div class="sensor-row">
+          <span class="sensor-name">LDR (Light)</span>
+          <span class="sensor-pill sp-offline" id="pillLDR">Unavailable</span>
+        </div>
+        <div class="sensor-row">
+          <span class="sensor-name">Current Sensor</span>
+          <span class="sensor-pill sp-offline" id="pillCurrent">Unavailable</span>
+        </div>
+      </div>
+
+      <div style="font-size:9.5px;color:rgba(255,255,255,.3);line-height:1.5;">
+        AI prediction requires ≥ 30 data points.<br>
+        Collecting data — predictions shown when ready.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── ENV MONITORING + ENERGY BREAKDOWN ─── -->
+  <div class="lower-row">
+
+    <!-- Environmental Monitoring -->
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v4l3 3"/>
+            </svg>
+            Environmental Monitoring
+          </div>
+          <div class="card-sub">Live ESP32 sensor readings</div>
+        </div>
+        <div class="cbadge cb-gray" id="envRangeBadge">Waiting…</div>
+      </div>
+      <div class="env-grid">
+
+        <!-- Temperature -->
+        <div class="env-card">
+          <div class="env-top">
+            <div class="env-icon" style="background:#fff7ed;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+              </svg>
+            </div>
+            <div class="env-status">
+              <div class="env-status-cap">Comfort</div>
+              <div class="env-status-val" id="tempComfort" style="color:#f97316;">—</div>
+            </div>
+          </div>
+          <div class="env-val" id="envTemp">—</div>
+          <div class="env-lbl">Temperature</div>
+          <div class="env-bar-wrap"><div class="env-bar" id="tempBar" style="width:0%;background:linear-gradient(90deg,#fbbf24,#f97316);"></div></div>
+        </div>
+
+        <!-- Humidity -->
+        <div class="env-card">
+          <div class="env-top">
+            <div class="env-icon" style="background:#eff6ff;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+              </svg>
+            </div>
+            <div class="env-status">
+              <div class="env-status-cap">Status</div>
+              <div class="env-status-val" id="humStatus" style="color:#3b82f6;">—</div>
+            </div>
+          </div>
+          <div class="env-val" id="envHum">—</div>
+          <div class="env-lbl">Humidity</div>
+          <div class="env-bar-wrap"><div class="env-bar" id="humBar" style="width:0%;background:linear-gradient(90deg,#60a5fa,#3b82f6);"></div></div>
+        </div>
+
+        <!-- Occupancy (PIR) -->
+        <div class="env-card">
+          <div class="env-top">
+            <div class="env-icon" style="background:#f5f3ff;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="env-status">
+              <div class="env-status-cap">PIR</div>
+              <div class="env-status-val" id="pirStatus" style="color:#8b5cf6;">—</div>
+            </div>
+          </div>
+          <div class="env-val" id="envOccupancy">—</div>
+          <div class="env-lbl">Motion / Presence</div>
+          <div class="env-bar-wrap"><div class="env-bar" id="pirBar" style="width:0%;background:linear-gradient(90deg,#a78bfa,#8b5cf6);"></div></div>
+        </div>
+
+        <!-- Light (LDR) -->
+        <div class="env-card">
+          <div class="env-top">
+            <div class="env-icon" style="background:#fefce8;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+            </div>
+            <div class="env-status">
+              <div class="env-status-cap">Raw ADC</div>
+              <div class="env-status-val" id="ldrRaw" style="color:#eab308;">—</div>
+            </div>
+          </div>
+          <div class="env-val" id="envLight">N/A</div>
+          <div class="env-lbl">Ambient Light (sensor removed)</div>
+          <div class="env-bar-wrap"><div class="env-bar" id="ldrBar" style="width:0%;background:linear-gradient(90deg,#fde047,#eab308);"></div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Energy Metrics (replaces static donut) -->
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+              <polyline points="17 6 23 6 23 12"/>
+            </svg>
+            Session Metrics
+          </div>
+          <div class="card-sub">Calculated from live measurements</div>
+        </div>
+        <div class="cbadge cb-green">Live</div>
+      </div>
+      <div class="impact-grid">
+
+        <div class="impact-item">
+          <div class="impact-icon" style="background:#dcfce7;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/>
+            </svg>
+          </div>
+          <div class="impact-val" id="metEnergy">—</div>
+          <div class="impact-lbl">Session Energy (kWh)</div>
+          <div class="impact-bar-wrap"><div class="impact-bar" id="metEnergyBar" style="width:0%;background:linear-gradient(90deg,#22c55e,#4ade80);"></div></div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-icon" style="background:#fef9c3;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ca8a04" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <div class="impact-val" id="metCost">—</div>
+          <div class="impact-lbl">Electricity Cost (₹)</div>
+          <div class="impact-bar-wrap"><div class="impact-bar" id="metCostBar" style="width:0%;background:linear-gradient(90deg,#fbbf24,#f59e0b);"></div></div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-icon" style="background:#f0fdfa;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="impact-val" id="metCO2">—</div>
+          <div class="impact-lbl">Est. CO₂ (kg)</div>
+          <div class="impact-bar-wrap"><div class="impact-bar" id="metCO2Bar" style="width:0%;background:linear-gradient(90deg,#14b8a6,#0d9488);"></div></div>
+        </div>
+
+        <div class="impact-item">
+          <div class="impact-icon" style="background:#eff6ff;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <div class="impact-val" id="metTariff">₹<span id="metTariffVal">—</span>/kWh</div>
+          <div class="impact-lbl">Electricity Tariff</div>
+          <div class="impact-bar-wrap"><div class="impact-bar" style="width:100%;background:linear-gradient(90deg,#60a5fa,#3b82f6);"></div></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── ALERTS ─────────────────────────────── -->
+  <div class="lower-row">
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            Live Alerts
+          </div>
+          <div class="card-sub">Sensor-driven anomaly detection</div>
+        </div>
+        <div class="cbadge" id="alertBadge" style="background:var(--gray-100);color:var(--gray-500);border-color:var(--gray-300);">—</div>
+      </div>
+      <div class="alert-list" id="alertList">
+        <div class="alert-item sev-low">
+          <div class="alert-dot"></div>
+          <div class="alert-body">
+            <div class="alert-ttl">Waiting for sensor data</div>
+            <div class="alert-desc">Alerts are generated from live ESP32 measurements. No data yet.</div>
+          </div>
+          <div class="alert-time">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Raw sensor debug panel -->
+    <div class="card">
+      <div class="card-hdr">
+        <div>
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+            Raw Sensor Values
+          </div>
+          <div class="card-sub">Latest ESP32 JSON response</div>
+        </div>
+        <div class="cbadge cb-gray" id="rawBadge">—</div>
+      </div>
+      <div class="impact-grid">
+        <div class="impact-item">
+          <div class="impact-icon" style="background:#fff7ed;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+          </div>
+          <div class="impact-val" id="rawTemp" style="font-size:16px;">—</div>
+          <div class="impact-lbl">DHT22 Temperature</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-icon" style="background:#eff6ff;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          </div>
+          <div class="impact-val" id="rawHum" style="font-size:16px;">—</div>
+          <div class="impact-lbl">DHT22 Humidity</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-icon" style="background:#fefce8;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+          </div>
+          <div class="impact-val" id="rawLDR" style="font-size:16px;">—</div>
+          <div class="impact-lbl">LDR — sensor removed</div>
+        </div>
+        <div class="impact-item">
+          <div class="impact-icon" style="background:#dcfce7;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/></svg>
+          </div>
+          <div class="impact-val" id="rawCurrent" style="font-size:16px;">—</div>
+          <div class="impact-lbl">Current Sensor (A)</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-brand">
+    <div class="footer-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/>
+      </svg>
+    </div>
+    <div>
+      <div class="footer-name">GreenVolt AI</div>
+      <div class="footer-tagline">Intelligent Energy &amp; Environmental Optimization</div>
+    </div>
+  </div>
+  <div class="footer-right">
+    <div class="footer-meta">v3.0.0 · ESP32 IoT</div>
+    <div class="footer-meta">Polling every 1 s</div>
+    <div class="footer-status" id="footerStatus">Connecting…</div>
+  </div>
+</footer>
+
+
+<script>
+'use strict';
+/* ═══════════════════════════════════════════════════════════════════
+   ██████╗ ██████╗ ███████╗███████╗███╗   ██╗██╗   ██╗ ██████╗ ██╗  ████████╗
+   Configuration — edit ONLY this section to match your setup
+═══════════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  // ── ESP32 network address ──────────────────────────────────────
+  // ▶▶▶ CHANGE THIS to the IP printed by the ESP32 Serial Monitor ◀◀◀
+  // The ESP32 prints "IP: xxx.xxx.xxx.xxx" after connecting to Wi-Fi.
+  // If the IP changes after a reboot, update this value and reload the page.
+  // Example: "http://192.168.1.42"
+  ESP32_BASE_URL: 'http://10.206.64.128',
+
+  // ── Electrical parameters ──────────────────────────────────────
+  GRID_VOLTAGE:        230,    // Volts (change to 120 for US/Japan grids)
+
+  // ── Electricity cost ───────────────────────────────────────────
+  ELECTRICITY_TARIFF:  8.00,   // ₹ per kWh
+
+  // ── Carbon emission factor ─────────────────────────────────────
+  GRID_EMISSION_FACTOR: 0.7,   // kg CO₂ per kWh (varies by grid/country)
+
+  // ── LDR calibration ───────────────────────────────────────────
+  // Adjust LDR_MIN and LDR_MAX based on your specific LDR module and
+  // ADC readings in complete darkness vs full brightness.
+  LDR_MIN: 0,                  // ADC value = darkest (0 %)
+  LDR_MAX: 4095,               // ADC value = brightest (100 %) — 12-bit ADC default
+
+  // ── Polling & timeouts ─────────────────────────────────────────
+  POLL_INTERVAL_MS:    1000,   // milliseconds between ESP32 requests
+  REQUEST_TIMEOUT_MS:  3000,   // abort fetch after this many ms
+
+  // ── Rolling graph buffer ───────────────────────────────────────
+  GRAPH_MAX_POINTS:    60,     // maximum data points displayed in chart
+
+  // ── Alert thresholds ──────────────────────────────────────────
+  ALERT_HIGH_POWER_KW:   2.0,  // flag high consumption above this (kW)
+  ALERT_HIGH_TEMP_C:    32.0,  // flag high temperature above this (°C)
+  ALERT_HIGH_HUM_PCT:   80,    // flag high humidity above this (%)
+};
+
+/* ════════════════════════════════════════════════════════════════
+   APPLICATION STATE — never contains random or hardcoded values
+═══════════════════════════════════════════════════════════════ */
+const state = {
+  // Connection
+  connected:       false,
+  lastSuccessTime: null,       // Date of last successful fetch
+  consecutiveErrors: 0,
+
+  // Accumulated energy (kWh) — calculated from real timestamps
+  totalEnergyKWh:  0,
+  prevTimestamp:   null,       // previous ESP32 Unix timestamp (seconds)
+  prevPowerKW:     null,       // previous power value for trapezoidal integration
+
+  // Rolling time-series for chart
+  chartLabels:     [],         // HH:MM:SS strings
+  chartPower:      [],         // power kW values
+
+  // Sparkline histories (circular buffer, last 20 points)
+  spark1History:   [],         // power
+  spark2History:   [],         // energy
+  spark3History:   [],         // current
+  spark4History:   [],         // CO2
+
+  // Chart.js instance references
+  energyChart:     null,
+  spark1Chart:     null,
+  spark2Chart:     null,
+  spark3Chart:     null,
+  spark4Chart:     null,
+
+  // Active alerts (deduped by key)
+  activeAlerts:    {},
+
+  // Polling control — prevents overlapping requests
+  pollTimer:       null,
+  abortController: null,
+  isRequesting:    false,
+};
+
+/* ════════════════════════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════════════════════ */
+
+/** Safe number check — returns true only for real finite numbers */
+function isValid(v) {
+  return typeof v === 'number' && isFinite(v) && !isNaN(v);
+}
+
+/** Safe 2-decimal format, fallback to placeholder on bad data */
+function fmt2(v, unit = '') {
+  return isValid(v) ? v.toFixed(2) + (unit ? ' ' + unit : '') : '—';
+}
+
+function fmt3(v, unit = '') {
+  return isValid(v) ? v.toFixed(3) + (unit ? ' ' + unit : '') : '—';
+}
+
+function clamp(v, lo, hi) {
+  return Math.min(hi, Math.max(lo, v));
+}
+
+function timeString(date) {
+  const d = date || new Date();
+  return [d.getHours(), d.getMinutes(), d.getSeconds()]
+    .map(n => String(n).padStart(2, '0')).join(':');
+}
+
+function el(id) { return document.getElementById(id); }
+
+function setText(id, text) {
+  const e = el(id);
+  if (e) e.textContent = text;
+}
+
+function setWidth(id, pct) {
+  const e = el(id);
+  if (e) e.style.width = clamp(pct, 0, 100) + '%';
+}
+
+/** Push to a capped array — oldest entry removed when over maxLen */
+function pushCapped(arr, val, maxLen) {
+  arr.push(val);
+  if (arr.length > maxLen) arr.shift();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   LIVE CLOCK
+═══════════════════════════════════════════════════════════════ */
+(function startClock() {
+  const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+  function tick() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    const clk = el('clock');
+    const dtl = el('dateline');
+    if (clk) clk.textContent =
+      `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    if (dtl) dtl.textContent =
+      `${DAYS[now.getDay()]}, ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ════════════════════════════════════════════════════════════════
+   SPARKLINE FACTORY — responsive:false, fixed 34 px, no random data
+═══════════════════════════════════════════════════════════════ */
+function createSparkline(canvasId, color) {
+  const canvas = el(canvasId);
+  canvas.style.height = '34px';
+  canvas.style.maxHeight = '34px';
+  const ctx = canvas.getContext('2d');
+  const g = ctx.createLinearGradient(0, 0, 0, 34);
+  g.addColorStop(0, color + '55');
+  g.addColorStop(1, color + '00');
+  return new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        data: [],
+        borderColor: color,
+        borderWidth: 1.8,
+        pointRadius: 0,
+        fill: true,
+        backgroundColor: g,
+        tension: 0.4,
+      }]
+    },
+    options: {
+      responsive: false,
+      maintainAspectRatio: false,
+      animation: { duration: 200 },
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      scales: { x: { display: false }, y: { display: false } }
+    }
+  });
+}
+
+function updateSparkline(chart, historyArr, newVal) {
+  pushCapped(historyArr, newVal, 20);
+  chart.data.labels   = historyArr.map((_, i) => i);
+  chart.data.datasets[0].data = [...historyArr];
+  chart.update('none'); // no animation on every tick
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ENERGY CHART — created once, updated with real data
+═══════════════════════════════════════════════════════════════ */
+function createEnergyChart() {
+  const placeholder = el('chartPlaceholder');
+  if (placeholder) placeholder.style.display = 'none';
+
+  const canvas = document.createElement('canvas');
+  canvas.id = 'energyChartCanvas';
+  canvas.style.width = '100%';
+  canvas.style.height = '280px';
+
+  const container = el('chartContainer');
+  container.innerHTML = '';
+  container.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 0, 280);
+  grad.addColorStop(0, 'rgba(34,197,94,.18)');
+  grad.addColorStop(1, 'rgba(34,197,94,0)');
+
+  return new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Power (kW)',
+        data: [],
+        borderColor: '#22c55e',
+        borderWidth: 2.2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true,
+        backgroundColor: grad,
+        tension: 0.35,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 200 },
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(30,36,51,.95)',
+          titleColor: '#fff',
+          bodyColor: 'rgba(255,255,255,.75)',
+          padding: 10,
+          borderColor: 'rgba(255,255,255,.08)',
+          borderWidth: 1,
+          callbacks: {
+            label: c => ` Power: ${isValid(c.parsed.y) ? c.parsed.y.toFixed(3) + ' kW' : '—'}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(0,0,0,.04)', drawTicks: false },
+          ticks: {
+            color: '#9ca3af',
+            font: { size: 10, family: 'Inter' },
+            maxTicksLimit: 10,
+            maxRotation: 0,
+          },
+          border: { dash: [2, 2] }
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,.05)', drawTicks: false },
+          ticks: {
+            color: '#9ca3af',
+            font: { size: 10, family: 'Inter' },
+            callback: v => v.toFixed(2) + ' kW'
+          },
+          border: { display: false },
+          title: {
+            display: true,
+            text: 'kW',
+            color: '#9ca3af',
+            font: { size: 10, family: 'Inter' }
+          },
+          suggestedMin: 0,
+        }
+      }
+    }
+  });
+}
+
+function pushChartPoint(timeLabel, powerKW) {
+  pushCapped(state.chartLabels, timeLabel, CONFIG.GRAPH_MAX_POINTS);
+  pushCapped(state.chartPower,  powerKW,   CONFIG.GRAPH_MAX_POINTS);
+
+  if (!state.energyChart) {
+    state.energyChart = createEnergyChart();
+  }
+
+  state.energyChart.data.labels              = [...state.chartLabels];
+  state.energyChart.data.datasets[0].data    = [...state.chartPower];
+  state.energyChart.update('none');
+
+  const count = state.chartLabels.length;
+  setText('chartSubtitle',
+    `Last ${count} second${count !== 1 ? 's' : ''} · Rolling ${CONFIG.GRAPH_MAX_POINTS}s window`);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   JSON VALIDATION
+   Each function returns the validated value or null.
+   null → keep previous value and mark sensor offline.
+═══════════════════════════════════════════════════════════════ */
+function validatePayload(json) {
+  // Returns an object with validated fields, or throws on completely bad structure
+  if (typeof json !== 'object' || json === null) throw new Error('Response is not an object');
+
+  // ── DEBUG: log raw response so we can verify field mapping ──────
+  console.log('ESP32 SENSOR DATA:', json);
+
+  const result = {};
+
+  // ── Timestamp ──────────────────────────────────────────────────
+  const ts = json.timestamp;
+  result.timestamp = (isValid(ts) && ts > 0) ? ts : null;
+
+  // ── DHT22 — data.dht22.temperature / data.dht22.humidity ───────
+  const dht = json.dht22 || {};
+  result.temperature = isValid(dht.temperature) ? dht.temperature : null;
+  result.humidity    = isValid(dht.humidity)    ? dht.humidity    : null;
+
+  // ── Current sensor — now carries power/energy/cost/co2 too ─────
+  // API structure: data.current.amps / .power / .energy / .cost / .co2
+  const cur = json.current || {};
+  result.amps   = isValid(cur.amps)   && cur.amps   >= 0 ? cur.amps   : null;
+  result.power  = isValid(cur.power)  && cur.power  >= 0 ? cur.power  : null;  // Watts
+  result.energy = isValid(cur.energy) && cur.energy >= 0 ? cur.energy : null;  // kWh
+  result.cost   = isValid(cur.cost)   && cur.cost   >= 0 ? cur.cost   : null;  // ₹
+  result.co2    = isValid(cur.co2)    && cur.co2    >= 0 ? cur.co2    : null;  // kg
+
+  // ── LDR — sensor removed from this hardware build ──────────────
+  result.ldrRaw = null;
+  result.ldrPct = null;
+
+  // ── PIR — data.pir.motion / data.pir.occupancy ─────────────────
+  const pir = json.pir || {};
+  const occ = pir.occupancy;
+  result.occupancy = (occ === 0 || occ === 1) ? occ
+                   : (pir.motion === true ? 1 : pir.motion === false ? 0 : null);
+  result.motion    = (pir.motion === true);
+
+  // ── System — data.system.online ────────────────────────────────
+  result.systemOnline = (json.system && json.system.online === true);
+
+  return result;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ENERGY ACCUMULATION using real timestamps
+   Uses trapezoidal integration: ΔE = ((P1+P2)/2) × Δt
+═══════════════════════════════════════════════════════════════ */
+function accumulateEnergy(powerKW, timestampSec) {
+  if (!isValid(powerKW) || !isValid(timestampSec) || timestampSec <= 0) return;
+
+  if (state.prevTimestamp !== null && state.prevPowerKW !== null) {
+    const deltaT = timestampSec - state.prevTimestamp; // seconds
+    // Guard: skip negative, zero, or suspiciously large gaps (e.g. ESP32 restart)
+    if (deltaT > 0 && deltaT < 300) {
+      const deltaHours = deltaT / 3600;
+      const avgPower   = (state.prevPowerKW + powerKW) / 2;
+      const increment  = avgPower * deltaHours;
+      if (isValid(increment) && increment >= 0) {
+        state.totalEnergyKWh += increment;
+      }
+    }
+    // If gap > 300 s, assume ESP32 restart — do not add energy, just update anchor
+  }
+
+  state.prevTimestamp = timestampSec;
+  state.prevPowerKW   = powerKW;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ALERT ENGINE — rules driven by real sensor values
+═══════════════════════════════════════════════════════════════ */
+function evaluateAlerts(v) {
+  const now = timeString();
+
+  const rules = [
+    {
+      key:    'high_power',
+      active: isValid(v.powerKW) && v.powerKW > CONFIG.ALERT_HIGH_POWER_KW,
+      sev:    'sev-high',
+      title:  'High Power Consumption',
+      desc:   `Current draw ${isValid(v.powerKW) ? v.powerKW.toFixed(3) + ' kW' : '—'} exceeds threshold of ${CONFIG.ALERT_HIGH_POWER_KW} kW.`,
+    },
+    {
+      key:    'high_temp',
+      active: isValid(v.temperature) && v.temperature > CONFIG.ALERT_HIGH_TEMP_C,
+      sev:    'sev-medium',
+      title:  'High Temperature Detected',
+      desc:   `DHT22 reading ${v.temperature !== null ? v.temperature.toFixed(1) + ' °C' : '—'} is above ${CONFIG.ALERT_HIGH_TEMP_C} °C.`,
+    },
+    {
+      key:    'high_humidity',
+      active: isValid(v.humidity) && v.humidity > CONFIG.ALERT_HIGH_HUM_PCT,
+      sev:    'sev-medium',
+      title:  'High Humidity Detected',
+      desc:   `DHT22 reading ${v.humidity !== null ? v.humidity.toFixed(1) + '%' : '—'} exceeds ${CONFIG.ALERT_HIGH_HUM_PCT}%.`,
+    },
+    {
+      key:    'no_occupancy_high_power',
+      active: v.occupancy === 0 && isValid(v.powerKW) && v.powerKW > 0.1,
+      sev:    'sev-low',
+      title:  'No Motion but Load Active',
+      desc:   `PIR reports no presence, yet ${isValid(v.powerKW) ? v.powerKW.toFixed(3) + ' kW' : '—'} is being consumed.`,
+    },
+    {
+      key:    'esp32_offline',
+      active: !state.connected,
+      sev:    'sev-high',
+      title:  'ESP32 Offline',
+      desc:   'Dashboard cannot reach the ESP32. Check power and Wi-Fi.',
+    },
+  ];
+
+  rules.forEach(r => {
+    if (r.active) {
+      state.activeAlerts[r.key] = { ...r, time: now };
+    } else {
+      delete state.activeAlerts[r.key];
+    }
+  });
+
+  renderAlerts();
+}
+
+function renderAlerts() {
+  const list = el('alertList');
+  if (!list) return;
+
+  const alerts = Object.values(state.activeAlerts);
+  const badge  = el('alertBadge');
+
+  if (alerts.length === 0) {
+    list.innerHTML = `
+      <div class="alert-item sev-ok">
+        <div class="alert-dot"></div>
+        <div class="alert-body">
+          <div class="alert-ttl">All Systems Normal</div>
+          <div class="alert-desc">No anomalies detected from current sensor readings.</div>
+        </div>
+        <div class="alert-time">${timeString()}</div>
+      </div>`;
+    if (badge) { badge.className = 'cbadge cb-green'; badge.textContent = 'All Clear'; }
+    const nd1 = el('notifDot'); if (nd1) nd1.style.display = 'none';
+    return;
+  }
+
+  list.innerHTML = alerts.map(a => `
+    <div class="alert-item ${a.sev}">
+      <div class="alert-dot"></div>
+      <div class="alert-body">
+        <div class="alert-ttl">${a.title}</div>
+        <div class="alert-desc">${a.desc}</div>
+      </div>
+      <div class="alert-time">${a.time}</div>
+    </div>`).join('');
+
+  const highCount = alerts.filter(a => a.sev === 'sev-high').length;
+  if (badge) {
+    badge.className = highCount > 0 ? 'cbadge cb-red' : 'cbadge cb-orange';
+    badge.textContent = `${alerts.length} Active`;
+  }
+  const nd2 = el('notifDot'); if (nd2) nd2.style.display = 'block';
+}
+
+/* ════════════════════════════════════════════════════════════════
+   UI UPDATE — called on every successful ESP32 response
+   All displayed values originate here from validated sensor data.
+═══════════════════════════════════════════════════════════════ */
+function updateUI(v) {
+  // ── Power ───────────────────────────────────────────────────────
+  // Use data.current.power directly from ESP32 (already V×I on the device).
+  // Fall back to client-side calculation only if firmware doesn't supply it.
+  const powerW  = isValid(v.power) ? v.power
+                : (isValid(v.amps) ? v.amps * CONFIG.GRID_VOLTAGE : null);
+  const powerKW = isValid(powerW) ? powerW / 1000 : null;
+  v.powerKW = powerKW; // attach for alert engine
+
+  setText('kpiPower',    isValid(powerKW) ? powerKW.toFixed(3) : '—');
+  setText('kpiPowerSub', isValid(v.amps)
+    ? `${v.amps.toFixed(3)} A × ${CONFIG.GRID_VOLTAGE} V`
+    : 'Sensor unavailable');
+  setText('smPower',     isValid(powerKW) ? powerKW.toFixed(3) + ' kW' : '—');
+
+  // ── Current ─────────────────────────────────────────────────────
+  // data.current.amps
+  setText('kpiCurrent',    isValid(v.amps) ? v.amps.toFixed(3)                         : '—');
+  setText('kpiCurrentSub', isValid(v.amps) ? `${(v.amps * CONFIG.GRID_VOLTAGE).toFixed(1)} W` : 'Sensor unavailable');
+  setText('rawCurrent',    isValid(v.amps) ? v.amps.toFixed(3) + ' A'                  : 'Unavailable');
+
+  // ── Energy — use data.current.energy (kWh) from ESP32 ──────────
+  // The ESP32 accumulates energy server-side using real elapsed time.
+  // Use it directly; keep dashboard-side accumulateEnergy() as fallback
+  // for firmwares that don't supply the field.
+  let E = null;
+  if (isValid(v.energy)) {
+    E = v.energy;  // primary: ESP32-calculated kWh
+  } else if (isValid(powerKW) && isValid(v.timestamp)) {
+    accumulateEnergy(powerKW, v.timestamp);
+    E = state.totalEnergyKWh > 0 ? state.totalEnergyKWh : null;
+  }
+  setText('kpiEnergy',    isValid(E) ? E.toFixed(6) : '—');
+  setText('kpiEnergySub', isValid(E) ? 'Session total (kWh)' : 'Accumulating…');
+
+  // ── Cost — use data.current.cost (₹) from ESP32 ─────────────────
+  const cost = isValid(v.cost) ? v.cost
+             : (isValid(E) ? E * CONFIG.ELECTRICITY_TARIFF : null);
+  setText('smCost',  isValid(cost) ? '₹' + cost.toFixed(4) : '—');
+  setText('metCost', isValid(cost) ? '₹' + cost.toFixed(4) : '—');
+
+  // ── CO₂ — use data.current.co2 (kg) from ESP32 ──────────────────
+  const co2 = isValid(v.co2) ? v.co2
+            : (isValid(E) ? E * CONFIG.GRID_EMISSION_FACTOR : null);
+  setText('kpiCO2',    isValid(co2) ? co2.toFixed(6) : '—');
+  setText('kpiCO2Sub', 'Est. CO₂ (grid factor: ' + CONFIG.GRID_EMISSION_FACTOR + ' kg/kWh)');
+  setText('metCO2',    isValid(co2) ? co2.toFixed(6) + ' kg' : '—');
+
+  // ── Session metrics panel ───────────────────────────────────────
+  setText('metEnergy',  isValid(E) ? E.toFixed(6) + ' kWh' : '—');
+  setWidth('metEnergyBar', isValid(E)    ? Math.min(E    / 10  * 100, 100) : 0);
+  setWidth('metCostBar',   isValid(cost) ? Math.min(cost / 80  * 100, 100) : 0);
+  setWidth('metCO2Bar',    isValid(co2)  ? Math.min(co2  / 7   * 100, 100) : 0);
+  setText('metTariffVal', CONFIG.ELECTRICITY_TARIFF.toFixed(2));
+
+  // ── Temperature — data.dht22.temperature ────────────────────────
+  if (isValid(v.temperature)) {
+    setText('envTemp', v.temperature.toFixed(1) + '°C');
+    setText('rawTemp', v.temperature.toFixed(1) + ' °C');
+    const t = v.temperature;
+    setText('tempComfort', t < 20 ? 'Cool' : t < 26 ? 'Comfortable' : t < 32 ? 'Warm' : 'Hot');
+    const tcEl = el('tempComfort');
+    if (tcEl) tcEl.style.color = t < 20 ? '#3b82f6' : t < 26 ? '#22c55e' : t < 32 ? '#f97316' : '#ef4444';
+    setWidth('tempBar', clamp((t / 50) * 100, 0, 100));
+  } else {
+    setText('envTemp', 'Unavailable');
+    setText('rawTemp', 'Unavailable');
+    setText('tempComfort', '—');
+  }
+
+  // ── Humidity — data.dht22.humidity ──────────────────────────────
+  if (isValid(v.humidity)) {
+    setText('envHum', v.humidity.toFixed(1) + '%');
+    setText('rawHum', v.humidity.toFixed(1) + ' %');
+    const h = v.humidity;
+    setText('humStatus', h < 30 ? 'Dry' : h < 60 ? 'Comfortable' : h < 80 ? 'Humid' : 'Very Humid');
+    const hsEl = el('humStatus');
+    if (hsEl) hsEl.style.color = h < 30 ? '#f97316' : h < 60 ? '#22c55e' : h < 80 ? '#3b82f6' : '#ef4444';
+    setWidth('humBar', clamp(h, 0, 100));
+  } else {
+    setText('envHum',   'Unavailable');
+    setText('rawHum',   'Unavailable');
+    setText('humStatus','—');
+  }
+
+  // ── PIR / Occupancy — data.pir.motion / data.pir.occupancy ──────
+  if (v.occupancy !== null) {
+    const detected = v.occupancy === 1;
+    setText('envOccupancy', detected ? 'Detected' : 'No Motion');
+    setText('pirStatus',    detected ? 'Motion'   : 'Clear');
+    const psEl = el('pirStatus');
+    if (psEl) psEl.style.color = detected ? '#8b5cf6' : '#9ca3af';
+    setWidth('pirBar', detected ? 100 : 10);
+  } else {
+    setText('envOccupancy', 'Unavailable');
+    setText('pirStatus',    '—');
+  }
+
+  // ── LDR — sensor removed, always N/A ────────────────────────────
+  setText('envLight', 'N/A');
+  setText('ldrRaw',   'N/A');
+  setText('rawLDR',   'N/A – removed');
+  setWidth('ldrBar',  0);
+
+  // ── Environmental range badge ────────────────────────────────────
+  const tempOk = !isValid(v.temperature) || (v.temperature >= 18 && v.temperature <= 30);
+  const humOk  = !isValid(v.humidity)    || (v.humidity   >= 30 && v.humidity   <= 70);
+  const envBadge = el('envRangeBadge');
+  if (envBadge) {
+    if (tempOk && humOk) {
+      envBadge.className = 'cbadge cb-green'; envBadge.textContent = 'Normal Range';
+    } else {
+      envBadge.className = 'cbadge cb-red'; envBadge.textContent = 'Out of Range';
+    }
+  }
+
+  // ── Chart — power in kW ──────────────────────────────────────────
+  if (isValid(powerKW)) {
+    pushChartPoint(timeString(), powerKW);
+  }
+
+  // ── Sparklines ───────────────────────────────────────────────────
+  if (isValid(powerKW) && state.spark1Chart) updateSparkline(state.spark1Chart, state.spark1History, powerKW);
+  if (isValid(E)       && state.spark2Chart) updateSparkline(state.spark2Chart, state.spark2History, E);
+  if (isValid(v.amps)  && state.spark3Chart) updateSparkline(state.spark3Chart, state.spark3History, v.amps);
+  if (isValid(co2)     && state.spark4Chart) updateSparkline(state.spark4Chart, state.spark4History, co2);
+
+  // ── Sensor status pills ──────────────────────────────────────────
+  setPill('pillDHT22',   isValid(v.temperature) && isValid(v.humidity));
+  setPill('pillPIR',     v.occupancy !== null);
+  setPill('pillLDR',     false);   // LDR removed — always show as offline
+  setPill('pillCurrent', isValid(v.amps));
+
+  // ── Last update line ─────────────────────────────────────────────
+  setText('lastUpdateLine', `Last update: ${timeString()} · Polling every ${CONFIG.POLL_INTERVAL_MS / 1000}s`);
+
+  // ── Alerts ───────────────────────────────────────────────────────
+  evaluateAlerts(v);
+}
+
+function setPill(id, online) {
+  const e = el(id);
+  if (!e) return;
+  e.className  = 'sensor-pill ' + (online ? 'sp-online' : 'sp-offline');
+  e.textContent = online ? 'Online' : 'Unavailable';
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CONNECTION STATE
+═══════════════════════════════════════════════════════════════ */
+function setConnected(ok) {
+  state.connected = ok;
+  const badge  = el('connBadge');
+  const banner = el('connBanner');
+
+  // Helper: safe direct element access (guards against null on any element)
+  const safeSet = (id, prop, val) => { const e = el(id); if (e) e[prop] = val; };
+  const safeStyle = (id, prop, val) => { const e = el(id); if (e) e.style[prop] = val; };
+
+  if (ok) {
+    state.consecutiveErrors = 0;
+    state.lastSuccessTime   = new Date();
+
+    if (badge) { badge.style.background = ''; badge.style.borderColor = ''; }
+    safeSet('connBadgeText', 'textContent', 'ESP32 Connected');
+    if (banner) banner.className = 'conn-banner';
+    setPill('pillESP32', true);
+    safeSet('footerStatus', 'textContent', 'ESP32 Connected');
+    safeStyle('footerStatus', 'color', '');
+    setText('sysTitle', 'ESP32 Online');
+    setText('sysBody',  `Connected to ${CONFIG.ESP32_BASE_URL}. Receiving live sensor data.`);
+    safeSet('esp32UrlDisplay', 'textContent', CONFIG.ESP32_BASE_URL);
+    setText('rawBadge', timeString());
+    safeSet('rawBadge', 'className', 'cbadge cb-green');
+  } else {
+    state.consecutiveErrors++;
+
+    if (badge) { badge.style.background = '#fff5f5'; badge.style.borderColor = '#fecaca'; }
+    safeSet('connBadgeText', 'textContent', 'ESP32 Offline');
+
+    const msg = `Unable to connect to ${CONFIG.ESP32_BASE_URL}/api/sensor-data — retrying…`;
+    if (banner) { banner.className = 'conn-banner offline'; }
+    safeSet('connBannerMsg', 'textContent', msg);
+    setPill('pillESP32', false);
+    safeSet('footerStatus', 'textContent', 'ESP32 Offline');
+    safeStyle('footerStatus', 'color', '#ef4444');
+    setText('sysTitle', 'ESP32 Offline');
+    setText('sysBody',  msg);
+    safeSet('esp32UrlDisplay', 'textContent', CONFIG.ESP32_BASE_URL);
+    safeSet('smLastSeen', 'textContent',
+      state.lastSuccessTime ? timeString(state.lastSuccessTime) : 'Never');
+    safeSet('rawBadge', 'className', 'cbadge cb-red');
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ESP32 FETCH — single request, guarded against overlap
+═══════════════════════════════════════════════════════════════ */
+async function fetchSensorData() {
+  if (state.isRequesting) return; // guard: skip if previous request still in flight
+  state.isRequesting = true;
+
+  // Cancel any stale controller
+  if (state.abortController) {
+    try { state.abortController.abort(); } catch (_) {}
+  }
+  state.abortController = new AbortController();
+  const timeout = setTimeout(
+    () => { try { state.abortController.abort(); } catch (_) {} },
+    CONFIG.REQUEST_TIMEOUT_MS
+  );
+
+  const url = CONFIG.ESP32_BASE_URL + '/api/sensor-data';
+
+  try {
+    const response = await fetch(url, {
+      signal: state.abortController.signal,
+      headers: { 'Accept': 'application/json' },
+      cache:  'no-store',
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const json = await response.json();
+
+    // Log raw payload to console for verification
+    console.log('ESP32 RAW JSON:', json);
+
+    const validated = validatePayload(json);
+
+    // Mark online on any successful HTTP 200 + valid JSON.
+    // Also honour data.system.online if present.
+    const isOnline = response.ok && (validated.systemOnline !== false);
+    setConnected(isOnline);
+    const sls = el('smLastSeen'); if (sls) sls.textContent = timeString();
+    updateUI(validated);
+
+  } catch (err) {
+    clearTimeout(timeout);
+    if (err.name !== 'AbortError') {
+      // Only mark offline if not a deliberate abort
+      setConnected(false);
+      evaluateAlerts({ powerKW: null, temperature: null, humidity: null, occupancy: null });
+    }
+  } finally {
+    state.isRequesting = false;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   POLLING LOOP — single timer, no overlap
+═══════════════════════════════════════════════════════════════ */
+function startPolling() {
+  // Fire immediately, then on interval
+  fetchSensorData();
+  state.pollTimer = setInterval(fetchSensorData, CONFIG.POLL_INTERVAL_MS);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Show configured URL immediately
+  const urlEl = el('esp32UrlDisplay'); if (urlEl) urlEl.textContent = CONFIG.ESP32_BASE_URL;
+
+  // Initialise sparklines (empty — no data until ESP32 responds)
+  state.spark1Chart = createSparkline('spark1', '#22c55e');
+  state.spark2Chart = createSparkline('spark2', '#3b82f6');
+  state.spark3Chart = createSparkline('spark3', '#f97316');
+  state.spark4Chart = createSparkline('spark4', '#14b8a6');
+
+  // Show tariff in session metrics immediately (it is a config value, not a sensor value)
+  setText('metTariffVal', CONFIG.ELECTRICITY_TARIFF.toFixed(2));
+
+  // Set connecting state
+  setConnected(false);
+  const cb = el('connBanner');    if (cb)  cb.className  = 'conn-banner waiting';
+  const cm = el('connBannerMsg'); if (cm)  cm.textContent = `Connecting to ESP32 at ${CONFIG.ESP32_BASE_URL}…`;
+
+  startPolling();
+});
+</script>
+</body>
+</html>
